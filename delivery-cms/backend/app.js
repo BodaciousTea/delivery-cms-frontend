@@ -1,16 +1,23 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-require('dotenv').config();
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
+const PORT = 3000;
 
+// Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
+// Import and use routes
+const fileRoutes = require("./routes/files");
+app.use("/api", fileRoutes);
 
-const routes = require('./routes/index');
-app.use('/api', routes);
+// Root route for basic information
+app.get("/", (req, res) => {
+  res.send("Welcome to the Media API! Use '/api/files' to fetch the list of files.");
+});
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
