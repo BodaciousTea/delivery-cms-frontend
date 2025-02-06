@@ -3,13 +3,13 @@ import { MediaGrid } from "../components/MediaGrid";
 import styles from "./Dashboard.module.css";
 
 interface MediaItem {
-  id: string; // Unique ID for React key
-  title: string; // Video name
-  type: "video"; // Set to "video" since it's for videos
-  thumbnail: string; // Placeholder thumbnail
-  project: string; // Optional project categorization
-  date: string; // File upload date
-  url: string; // S3 presigned URL
+  id: string; 
+  title: string; 
+  type: "video"; 
+  thumbnail: string; 
+  project: string; 
+  date: string; 
+  url: string; 
 }
 
 export const Dashboard = () => {
@@ -19,33 +19,40 @@ export const Dashboard = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Fetch video data from the backend
-  useEffect(() => {
-    const fetchMedia = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/files");
-        if (!response.ok) throw new Error("Failed to fetch files.");
+useEffect(() => {
+  const fetchMedia = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found.");
 
-        const data = await response.json();
-        const formattedData = data.files.map((file: { name: string; url: string }) => ({
-          id: file.name, // Use the file name as the ID
-          title: file.name,
-          type: "video", // Assuming all files are videos
-          thumbnail: "/placeholder.svg", // Placeholder thumbnail
-          project: "Uncategorized", // Add project logic if needed
-          date: new Date().toISOString(), // Replace with actual date if available
-          url: file.url, // Presigned S3 URL
-        }));
-        setMediaItems(formattedData);
-      } catch (err: any) {
-        setError(err.message || "An error occurred.");
-      } finally {
-        setLoading(false);
-      }
-    };
+      const response = await fetch("http://localhost:3000/api/files", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error("Failed to fetch files.");
 
-    fetchMedia();
-  }, []);
+      const data = await response.json();
+      const formattedData = data.files.map((file: { name: string; url: string }) => ({
+        id: file.name,
+        title: file.name,
+        type: "video",
+        thumbnail: "/placeholder.svg",
+        project: "Uncategorized",
+        date: new Date().toISOString(),
+        url: file.url,
+      }));
+      setMediaItems(formattedData);
+    } catch (err: any) {
+      setError(err.message || "An error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchMedia();
+}, []);
+
 
   const projects = useMemo(() => {
     const projectSet = new Set(mediaItems.map((item) => item.project));

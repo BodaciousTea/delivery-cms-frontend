@@ -9,6 +9,10 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+const adminRoutes = require("./routes/admin");
+app.use("/admin", adminRoutes);
+
+
 // Import and use routes
 const fileRoutes = require("./routes/files");
 app.use("/api", fileRoutes);

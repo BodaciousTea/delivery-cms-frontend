@@ -1,25 +1,93 @@
-import React, { useState } from "react";
-import styles from "./LoginPage.module.css";
+import React, { useState, useEffect } from "react";
+import { CognitoUser, AuthenticationDetails } from "amazon-cognito-identity-js";
+import { useNavigate } from "react-router-dom";
+import { userPool } from "../cognitoConfig";
 
 const LoginPage: React.FC = () => {
-  const [password, setPassword] = useState("");
+  useEffect(() => {
+    console.log("LoginPage rendered");
+  }, []);
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSignIn = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Attempting sign in for:", email);
+
+    try {
+      const authenticationDetails = new AuthenticationDetails({
+        Username: email,
+        Password: password,
+      });
+      const userData = {
+        Username: email,
+        Pool: userPool,
+      };
+      const cognitoUser = new CognitoUser(userData);
+      console.log("Created CognitoUser, calling authenticateUser");
+
+      cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: (result) => {
+          console.log("Sign in successful", result);
+          const idToken = result.getIdToken().getJwtToken();
+          localStorage.setItem("token", idToken);
+          navigate("/");
+        },
+        onFailure: (err) => {
+          console.error("Error signing in:", err);
+          setError(err.message || "Error signing in");
+        },
+      });
+    } catch (err) {
+      console.error("Exception during sign in:", err);
+      setError("Exception during sign in");
+    }
   };
 
   return (
-    <div className={styles.loginContainer}>
-      <div className={styles.inputContainer}>
+    <div
+      style={{
+        backgroundColor: "black",
+        color: "white",
+        padding: "20px",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <h1>Login Page</h1>
+      <form onSubmit={handleSignIn}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          required
+          style={{ marginBottom: "10px", padding: "5px", fontSize: "1rem", width: "300px" }}
+        />
+        <br />
         <input
           type="password"
           value={password}
-          onChange={handlePasswordChange}
-          className={styles.passwordInput}
-          placeholder="Input Your Provided Password Here"
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+          style={{ marginBottom: "10px", padding: "5px", fontSize: "1rem", width: "300px" }}
         />
-        <div className={styles.glowContainer}></div>
-      </div>
+        <br />
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <button
+          type="submit"
+          style={{ padding: "10px 20px", background: "blue", color: "white", fontSize: "1rem", border: "none", cursor: "pointer" }}
+        >
+          Log In
+        </button>
+      </form>
     </div>
   );
 };
