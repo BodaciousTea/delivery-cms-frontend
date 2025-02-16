@@ -1,58 +1,87 @@
-import { useState, useEffect, useMemo } from "react";
-import { MediaGrid } from "../components/MediaGrid";
+// src/pages/Dashboard.tsx
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import MediaGrid from "../components/MediaGrid";
 import styles from "./Dashboard.module.css";
 
 interface MediaItem {
-  id: string; 
-  title: string; 
-  type: "video"; 
-  thumbnail: string; 
-  project: string; 
-  date: string; 
-  url: string; 
+  id: string;
+  title: string;
+  type: "video" | "image";
+  thumbnail: string;
+  project: string;
+  date: string;
+  url: string;
+  clientId: string;
 }
 
-export const Dashboard = () => {
+const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+  const SESSION_DURATION = 3600000; // 1 hour
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const loginTimeStr = localStorage.getItem("loginTime");
+    if (!token || !loginTimeStr) {
+      navigate("/login");
+    } else {
+      const loginTime = parseInt(loginTimeStr, 10);
+      if (Date.now() - loginTime > SESSION_DURATION) {
+        alert("Your session has expired. Please log in again.");
+        localStorage.removeItem("token");
+        localStorage.removeItem("loginTime");
+        navigate("/login");
+      }
+    }
+  }, [navigate]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProject, setSelectedProject] = useState<string>("all");
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const fetchMedia = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No authentication token found.");
+  useEffect(() => {
+    const fetchMedia = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No authentication token found.");
 
-      const response = await fetch("http://localhost:3000/api/files", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error("Failed to fetch files.");
+        const response = await fetch("http://localhost:3000/api/files", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to fetch files.");
 
-      const data = await response.json();
-      const formattedData = data.files.map((file: { name: string; url: string }) => ({
-        id: file.name,
-        title: file.name,
-        type: "video",
-        thumbnail: "/placeholder.svg",
-        project: "Uncategorized",
-        date: new Date().toISOString(),
-        url: file.url,
-      }));
-      setMediaItems(formattedData);
-    } catch (err: any) {
-      setError(err.message || "An error occurred.");
-    } finally {
-      setLoading(false);
-    }
-  };
+        const data = await response.json();
+        // Retrieve clientId from localStorage (set during client login) or default to "client1"
+        const clientId = localStorage.getItem("clientId") || "client1";
 
-  fetchMedia();
-}, []);
+        const formattedData = data.files.map((file: { name: string; url: string }) => {
+          const ext = file.name.split(".").pop()?.toLowerCase();
+          const isImage = ext && ["jpg", "jpeg", "png", "gif", "webp"].includes(ext);
+          return {
+            id: file.name,
+            title: file.name,
+            type: isImage ? "image" : "video",
+            thumbnail: isImage ? file.url : "/placeholder.svg",
+            project: "Uncategorized",
+            date: new Date().toISOString(),
+            url: file.url,
+            clientId, // include clientId for building the download link
+          };
+        });
+        setMediaItems(formattedData);
+      } catch (err: any) {
+        setError(err.message || "An error occurred.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchMedia();
+  }, []);
 
   const projects = useMemo(() => {
     const projectSet = new Set(mediaItems.map((item) => item.project));
@@ -68,6 +97,15 @@ useEffect(() => {
       return matchesSearch && matchesProject;
     });
   }, [searchQuery, selectedProject, mediaItems]);
+
+  const handleDownload = async (item: MediaItem): Promise<Blob> => {
+    const response = await fetch(
+      `/admin/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`,
+      { method: "GET" }
+    );
+    if (!response.ok) throw new Error("Download failed");
+    return await response.blob();
+  };
 
   return (
     <div className={styles.dashboard}>
@@ -102,8 +140,10 @@ useEffect(() => {
       ) : error ? (
         <p style={{ color: "red" }}>{error}</p>
       ) : (
-        <MediaGrid items={filteredMedia} />
+        <MediaGrid items={filteredMedia} onDownload={handleDownload} />
       )}
     </div>
   );
 };
+
+export default Dashboard;

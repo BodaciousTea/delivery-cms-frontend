@@ -1,0 +1,74 @@
+.downloadButton {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease;
+}
+
+.downloadButton:hover {
+  transform: scale(1.05);
+}
+
+.downloadButton:active {
+  transform: scale(0.95);
+}
+
+.downloadButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.downloadIcon {
+  fill: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.checkPath,
+.arrowDown,
+.arrowLine {
+  stroke: #0077ff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: all 0.3s ease;
+}
+
+.checkPath {
+  stroke-dasharray: 38;
+  stroke-dashoffset: 114;
+  transition: all 0.4s ease;
+}
+
+.downloaded .arrowDown,
+.downloaded .arrowLine {
+  opacity: 0;
+  animation: drop 0.3s linear;
+  transition-delay: 0.4s;
+}
+
+.downloaded .checkPath {
+  stroke: #20cca5;
+  stroke-dashoffset: 174;
+  transition-delay: 0.4s;
+}
+
+@keyframes drop {
+  20% {
+    transform: translate(0, -3px);
+  }
+  80% {
+    transform: translate(0, 2px);
+  }
+  95% {
+    transform: translate(0, 0);
+  }
+}

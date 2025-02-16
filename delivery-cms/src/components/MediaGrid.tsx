@@ -1,41 +1,48 @@
+import React from "react";
+import DownloadButton from "./DownloadButton";
 import styles from "./MediaGrid.module.css";
 
-interface MediaItem {
+export interface MediaItem {
   id: string;
   title: string;
-  type: "video";
+  type: "video" | "image";
   thumbnail: string;
   project: string;
-  date: string;
   url: string;
+  clientId: string;
 }
 
 interface MediaGridProps {
   items: MediaItem[];
 }
 
-export const MediaGrid = ({ items }: MediaGridProps) => {
+const MediaGrid: React.FC<MediaGridProps> = ({ items }) => {
   return (
-    <div className={styles.container}>
-      <div className={styles.grid}>
-        {items.map((item) => (
-          <div key={item.id} className={styles.item}>
-            <div className={styles.thumbnail}>
-              <img src={item.thumbnail || "/placeholder.svg"} alt={item.title} />
-            </div>
-            <div className={styles.info}>
-              <h3>{item.title}</h3>
-              <a
-                href={item.url}
-                download={item.title} // Specify the file name for download
-                className={styles.downloadLink}
-              >
-                Download
-              </a>
+    <div className={styles.mediaGrid}>
+      {items.map((item) => (
+        <div key={item.id} className={styles.mediaItem}>
+          <div className={styles.mediaWrapper}>
+            {item.type === "image" ? (
+              <img src={item.url || "/placeholder.svg"} alt={item.title} className={styles.mediaContent} />
+            ) : (
+              <video className={styles.mediaContent} controls src={item.url}>
+                Your browser does not support the video tag.
+              </video>
+            )}
+          </div>
+          <div className={styles.mediaInfo}>
+            <h3 className={styles.mediaTitle}>{item.title}</h3>
+            <div className={styles.downloadWrapper}>
+              <DownloadButton 
+                url={`/admin/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`}
+                filename={item.title}
+              />
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };
+
+export default MediaGrid;

@@ -1,0 +1,269 @@
+/* Dark Mode Admin.css */
+
+/* Base styles */
+.admin-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.admin-header {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+/* Header and Navigation */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #333;
+}
+
+.logout-button {
+  background-color: transparent;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.logout-button:hover {
+  background-color: #333;
+  color: #ffffff;
+}
+
+/* Form and Input Styles */
+.section {
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.section h2 {
+  margin-bottom: 20px;
+  color: #ffffff;
+  font-size: 1.25rem;
+}
+
+.input-field {
+  padding: 10px;
+  margin-right: 10px;
+  width: 300px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.input-field:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
+}
+
+.button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.button.secondary {
+  background-color: #6c757d;
+}
+
+.button.danger {
+  background-color: #dc3545;
+}
+
+.button.danger:hover {
+  background-color: #c82333;
+}
+
+/* Layout Grid */
+.admin-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+/* User List Styles */
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.user-table th {
+  background-color: #2a2a2a;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.user-table tr:hover {
+  background-color: #333;
+}
+
+.user-table tr.selected {
+  background-color: #444;
+}
+
+/* Action Panel Styles */
+.action-panel {
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.action-panel h2 {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
+}
+
+/* File List Styles */
+.file-list {
+  margin-top: 20px;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  background-color: #2a2a2a;
+}
+
+.file-item:hover {
+  background-color: #333;
+}
+
+.file-item a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.file-item a:hover {
+  text-decoration: underline;
+}
+
+/* Message Styles */
+.message-success {
+  color: #28a745;
+  padding: 10px;
+  background-color: #1a3a1a;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.message-error {
+  color: #dc3545;
+  padding: 10px;
+  background-color: #3a1a1a;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+/* Result Box */
+.result-box {
+  margin-top: 15px;
+  background-color: #2a2a2a;
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid #333;
+}
+
+.result-box p {
+  margin: 5px 0;
+}
+
+/* File Upload Section */
+.file-upload-section {
+  margin-top: 20px;
+}
+
+.file-input {
+  margin-bottom: 10px;
+}
+
+/* Tabs Styling */
+.tabs {
+  margin-bottom: 20px;
+}
+
+.tab-list {
+  display: flex;
+  border-bottom: 1px solid #444;
+  margin-bottom: 15px;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: #e0e0e0;
+  font-weight: 500;
+}
+
+.tab.active {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-content {
+    grid-template-columns: 1fr;
+  }
+
+  .input-field {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

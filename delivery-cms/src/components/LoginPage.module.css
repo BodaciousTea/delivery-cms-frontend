@@ -8,57 +8,57 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Full viewport height for centering */
-  width: 100vw; /* Full viewport width */
-  background-color: #000000; /* Black background */
-  color: #ffffff; /* White text color */
+  height: 100vh;
+  width: 100vw;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .inputContainer {
   position: relative;
-  width: 300px; /* Input box width */
-  height: 50px; /* Input box height */
+  width: 300px;
+  height: 50px;
 }
 
 .passwordInput {
   width: 100%;
   height: 100%;
-  padding: 10px; /* Space inside the input box */
-  font-size: 20px; /* Font size for the input text */
-  font-family: "FuturaPTBook", sans-serif; /* Futura font applied */
-  color: #ffffff; /* White input text */
-  background-color: transparent; /* Transparent background */
-  border: 2px solid #ffffff; /* Solid white border */
-  outline: none; /* No focus outline */
-  text-align: center; /* Center-align the text */
-  box-sizing: border-box; /* Include padding and border in dimensions */
+  padding: 10px;
+  font-size: 20px;
+  font-family: "FuturaPTBook", sans-serif;
+  color: #ffffff;
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  outline: none;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .passwordInput::placeholder {
-  color: rgba(255, 255, 255, 0.7); /* Semi-transparent white for placeholder */
-  text-align: center; /* Center-align placeholder text */
-  transition: opacity 0.2s ease-in-out; /* Smooth fade-out transition */
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .passwordInput:focus::placeholder {
-  opacity: 0; /* Placeholder disappears when focused */
+  opacity: 0;
 }
 
 /* Glowing animation container */
 .glowContainer {
   position: absolute;
-  top: 60px; /* Distance below the input box */
-  width: 320px; /* Slightly wider than the input box */
-  height: 20px; /* Height of the glow effect */
+  top: 60px;
+  width: 320px;
+  height: 20px;
   background: linear-gradient(
     90deg,
     rgba(255, 0, 150, 0.3),
     rgba(0, 255, 255, 0.3)
   );
-  border-radius: 50%; /* Rounded edges for a smooth glow */
-  filter: blur(15px); /* Blur effect for a glowing look */
-  opacity: 0; /* Initially hidden */
-  animation: fadeInGlow 2s ease-in-out forwards; /* Trigger on page load */
+  border-radius: 50%;
+  filter: blur(15px);
+  opacity: 0;
+  animation: fadeInGlow 2s ease-in-out forwards;
 }
 
 /* Glow animation keyframes */

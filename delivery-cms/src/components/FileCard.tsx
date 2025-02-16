@@ -1,11 +1,11 @@
-import styles from "./FileCard.module.css"
+import styles from "./FileCard.module.css";
 
 interface FileCardProps {
-  name: string
-  size: string
-  uploadDate: string
-  downloads: number
-  onDownload: () => void
+  name: string;
+  size: string;
+  uploadDate: string;
+  downloads: number;
+  onDownload: () => void;
 }
 
 export const FileCard = ({ name, size, uploadDate, downloads, onDownload }: FileCardProps) => {
@@ -21,10 +21,9 @@ export const FileCard = ({ name, size, uploadDate, downloads, onDownload }: File
           <span>{downloads} downloads</span>
         </div>
       </div>
-      <button onClick={onDownload} className="btn btn-primary">
+      <button onClick={onDownload} className={styles.downloadButton}>
         Download
       </button>
     </div>
-  )
-}
-
+  );
+};

@@ -33,7 +33,10 @@ const LoginPage: React.FC = () => {
         onSuccess: (result) => {
           console.log("Sign in successful", result);
           const idToken = result.getIdToken().getJwtToken();
+          // Store the token
           localStorage.setItem("token", idToken);
+          // Also store the current timestamp as loginTime
+          localStorage.setItem("loginTime", Date.now().toString());
           navigate("/");
         },
         onFailure: (err) => {

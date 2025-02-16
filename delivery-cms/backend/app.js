@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
 const app = express();
 const PORT = 3000;
 
@@ -9,15 +8,15 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+// Register your routes
 const adminRoutes = require("./routes/admin");
-app.use("/admin", adminRoutes);
-
-
-// Import and use routes
 const fileRoutes = require("./routes/files");
-app.use("/api", fileRoutes);
+const otherRoutes = require("./routes/index"); // if you have additional routes
 
-// Root route for basic information
+app.use("/admin", adminRoutes);
+app.use("/api", fileRoutes);
+app.use("/", otherRoutes);
+
 app.get("/", (req, res) => {
   res.send("Welcome to the Media API! Use '/api/files' to fetch the list of files.");
 });

@@ -1,8 +1,12 @@
+// src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Dashboard } from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard"; // Use default import
 import LoginPage from "./components/LoginPage";
-import AdminPanel from "./components/AdminPanel"; // Make sure this component exists
+import AdminLogin from "./pages/Admin/AdminLogin";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminPrivateRoute from "./pages/Admin/AdminPrivateRoute";
 import { PrivateRoute } from "./components/PrivateRoute";
+import styles from "./DownloadButton.module.css";
 
 function App() {
   return (
@@ -10,6 +14,18 @@ function App() {
       <div className="app">
         <main className="container">
           <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            {/* Admin routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin"
+              element={
+                <AdminPrivateRoute>
+                  <AdminDashboard />
+                </AdminPrivateRoute>
+              }
+            />
+            {/* Other routes */}
             <Route
               path="/"
               element={
@@ -18,8 +34,6 @@ function App() {
                 </PrivateRoute>
               }
             />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </main>
       </div>
