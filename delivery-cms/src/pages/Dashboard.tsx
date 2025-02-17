@@ -10,7 +10,6 @@ interface MediaItem {
   type: "video" | "image";
   thumbnail: string;
   project: string;
-  date: string;
   url: string;
   clientId: string;
 }
@@ -55,7 +54,6 @@ const Dashboard: React.FC = () => {
         if (!response.ok) throw new Error("Failed to fetch files.");
 
         const data = await response.json();
-        // Retrieve clientId from localStorage (set during client login) or default to "client1"
         const clientId = localStorage.getItem("clientId") || "client1";
 
         const formattedData = data.files.map((file: { name: string; url: string }) => {
@@ -67,9 +65,8 @@ const Dashboard: React.FC = () => {
             type: isImage ? "image" : "video",
             thumbnail: isImage ? file.url : "/placeholder.svg",
             project: "Uncategorized",
-            date: new Date().toISOString(),
             url: file.url,
-            clientId, // include clientId for building the download link
+            clientId,
           };
         });
         setMediaItems(formattedData);

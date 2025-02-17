@@ -6,9 +6,10 @@ import styles from './DownloadButton.module.css';
 interface DownloadButtonProps {
   url: string;
   filename: string;
+  onDownload?: () => Promise<Blob>;
 }
 
-const DownloadButton: React.FC<DownloadButtonProps> = ({ url, filename }) => {
+const DownloadButton: React.FC<DownloadButtonProps> = ({ url, filename, onDownload }) => {
   const [state, setState] = useState<'idle' | 'downloading' | 'completed'>('idle');
   const linkRef = useRef<HTMLAnchorElement>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -17,15 +18,12 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ url, filename }) => {
     const handleFocus = () => {
       if (state === 'downloading') {
         setState('completed');
-        
         animationTimeoutRef.current = setTimeout(() => {
-          // We no longer automatically reset to 'idle' here
-        }, 2000); // Animation duration
+        }, 2000);
       }
     };
 
     window.addEventListener('focus', handleFocus);
-
     return () => {
       window.removeEventListener('focus', handleFocus);
       if (animationTimeoutRef.current) {
@@ -34,20 +32,36 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ url, filename }) => {
     };
   }, [state]);
 
-  const handleClick = () => {
-    if (state === 'downloading') {
-      return;
-    }
-
+  const handleClick = async () => {
+    if (state === 'downloading') return;
     if (state === 'completed') {
       setState('idle');
       return;
     }
-
     setState('downloading');
 
-    if (linkRef.current) {
-      linkRef.current.click();
+    if (onDownload) {
+      try {
+        const blob = await onDownload();
+        const blobUrl = window.URL.createObjectURL(blob);
+        if (linkRef.current) {
+          linkRef.current.href = blobUrl;
+          linkRef.current.download = filename;
+          linkRef.current.click();
+        }
+        setTimeout(() => {
+          window.URL.revokeObjectURL(blobUrl);
+        }, 10000);
+      } catch (error) {
+        console.error("Download failed:", error);
+        setState('idle');
+      }
+    } else {
+      if (linkRef.current) {
+        linkRef.current.href = url;
+        linkRef.current.download = filename;
+        linkRef.current.click();
+      }
     }
   };
 
