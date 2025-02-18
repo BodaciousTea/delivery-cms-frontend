@@ -1,0 +1,78 @@
+@font-face {
+  font-family: "FuturaPTBook";
+  src: url("../assets/FuturaPTBook.otf") format("opentype");
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.inputContainer {
+  position: relative;
+  width: 300px;
+  height: 50px;
+}
+
+.passwordInput {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  font-size: 20px;
+  font-family: "FuturaPTBook", sans-serif;
+  color: #ffffff;
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  outline: none;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.passwordInput::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.passwordInput:focus::placeholder {
+  opacity: 0;
+}
+
+/* Glowing animation container */
+.glowContainer {
+  position: absolute;
+  top: 60px;
+  width: 320px;
+  height: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 150, 0.3),
+    rgba(0, 255, 255, 0.3)
+  );
+  border-radius: 50%;
+  filter: blur(15px);
+  opacity: 0;
+  animation: fadeInGlow 2s ease-in-out forwards;
+}
+
+/* Glow animation keyframes */
+@keyframes fadeInGlow {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

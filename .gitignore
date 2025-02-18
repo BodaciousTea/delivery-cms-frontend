@@ -1,0 +1,81 @@
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules/
+
+# Build output directories
+dist/
+dist-ssr/
+out/
+.build/
+.next/
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Local environment files
+.env
+backups/.env
+
+# IDE and editor files
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Test artifacts
+coverage/
+*.lcov
+*.test_results/
+*.spec.js
+*.spec.ts
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+*.bak
+*.swp
+*.swx
+*.un~
+~$*
+
+# Parcel cache
+.cache/
+
+# Optional npm/yarn/pnpm cache
+.npm/
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# JetBrains IDEs
+.idea/
+*.iws
+*.ipr
