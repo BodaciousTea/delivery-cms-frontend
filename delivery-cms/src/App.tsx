@@ -6,7 +6,6 @@ import AdminLogin from "./pages/Admin/AdminLogin";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminPrivateRoute from "./pages/Admin/AdminPrivateRoute";
 import { PrivateRoute } from "./components/PrivateRoute";
-import styles from "./DownloadButton.module.css";
 
 function App() {
   return (
