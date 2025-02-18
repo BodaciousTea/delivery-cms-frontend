@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy:delivery-cms": "gh-pages -d delivery-cms/dist -r https://github.com/BodaciousTea/delivery-cms-frontend.git"
+    "deploy": "gh-pages -d dist -r https://github.com/BodaciousTea/delivery-cms-frontend.git"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^6.9.1",
