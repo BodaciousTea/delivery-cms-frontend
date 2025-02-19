@@ -99,16 +99,39 @@ const Dashboard: React.FC = () => {
   }, [searchQuery, selectedProject, mediaItems]);
 
   const handleDownload = async (item: MediaItem): Promise<Blob> => {
-    const response = await fetch(
-      "https://api.tedkoller.com/admin/download?clientId=" +
-        item.clientId +
-        "&fileName=" +
-        encodeURIComponent(item.title),
-      { method: "GET" }
-    );
-    if (!response.ok) throw new Error("Download failed");
-    return await response.blob();
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found.");
+  
+      const response = await fetch(
+        `https://api.tedkoller.com/admin/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) throw new Error(`Download failed: ${response.statusText}`);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = item.title;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      return blob;
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      console.error("Download failed:", errorMessage);
+      alert("Download failed: " + errorMessage);
+      throw error;
+    }
   };
+  
   
 
   return (

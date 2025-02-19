@@ -6,7 +6,7 @@ const AWS = require("aws-sdk");
 const basicAuth = require("express-basic-auth");
 const { getNextClientNumber } = require("../dynamoCounter");
 
-// Protect all admin routes with HTTP Basic Auth
+/* Protect all admin routes with HTTP Basic Auth
 router.use(
   basicAuth({
     users: { [process.env.ADMIN_USERNAME]: process.env.ADMIN_PASSWORD },
@@ -14,6 +14,7 @@ router.use(
     realm: "Admin Area",
   })
 );
+*/
 
 // Initialize the Cognito Identity Service Provider
 const cognitoISP = new AWS.CognitoIdentityServiceProvider({
@@ -41,9 +42,8 @@ router.post("/create-user", async (req, res) => {
       .json({ error: "Error generating client ID", details: err.message });
   }
 
-  // Form a clientId such as "client2", "client3", etc.
+  // Form a clientId 
   const clientId = "client" + clientNumber;
-  // Generate a temporary password: an 8-character random string plus "A1!" for complexity.
   const temporaryPassword = Math.random().toString(36).slice(-8) + "A1!";
 
   const params = {
@@ -51,7 +51,7 @@ router.post("/create-user", async (req, res) => {
     Username: email,
     DesiredDeliveryMediums: ["EMAIL"],
     ForceAliasCreation: false,
-    MessageAction: "SUPPRESS", // Prevent automatic welcome email
+    MessageAction: "SUPPRESS",
     TemporaryPassword: temporaryPassword,
     UserAttributes: [
       { Name: "email", Value: email },
@@ -63,7 +63,6 @@ router.post("/create-user", async (req, res) => {
     const createResult = await cognitoISP.adminCreateUser(params).promise();
     console.log("User created:", createResult);
 
-    // Set the temporary password as permanent
     const setPassParams = {
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
       Username: email,
@@ -149,7 +148,6 @@ router.post("/generate-upload-url", async (req, res) => {
       .json({ error: "Email, clientId, and fileName are required" });
   }
 
-  // Construct the S3 key, e.g., "clients/client2/filename.jpg"
   const key = `clients/${clientId}/${fileName}`;
 
   try {
@@ -251,7 +249,6 @@ router.get("/files", async (req, res) => {
     const files = await Promise.all(
       data.Contents.map(async (file) => {
         if (file.Key.endsWith("/")) return null;
-        // Include the ResponseContentDisposition parameter to force download
         const url = await getSignedUrl(
           s3,
           new GetObjectCommand({
@@ -264,8 +261,8 @@ router.get("/files", async (req, res) => {
           { expiresIn: 3600 }
         );
         return {
-          name: file.Key.split("/").pop(), // Display name
-          key: file.Key,                   // Full S3 key used for deletion
+          name: file.Key.split("/").pop(), 
+          key: file.Key,
           url,
         };
       })
@@ -375,12 +372,10 @@ router.get("/download", async (req, res) => {
     });
     const s3Response = await s3.send(command);
 
-    // Set the attachment header with the desired filename.
     res.attachment(fileName.toString());
     if (s3Response.ContentType) {
       res.setHeader("Content-Type", s3Response.ContentType);
     }
-    // Pipe the file stream from S3 directly to the response.
     s3Response.Body.pipe(res);
   } catch (err) {
     console.error("Error streaming download:", err);
