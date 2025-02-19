@@ -1,4 +1,4 @@
-// delivery-cms/src/pages/Admin/AdminDashboard.tsx
+// src/pages/Admin/AdminDashboard.tsx
 "use client"
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -29,7 +29,7 @@ const AdminDashboard: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("http://localhost:3000/admin/users", {
+      const response = await fetch("https://api.tedkoller.com/admin/users", {
         headers: getAdminHeaders(),
       })
       const data = await response.json()
@@ -46,7 +46,7 @@ const AdminDashboard: React.FC = () => {
 
   const fetchUserFiles = async (clientId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/admin/files?clientId=${clientId}`, {
+      const response = await fetch(`https://api.tedkoller.com/admin/files?clientId=${clientId}`, {
         headers: getAdminHeaders(),
       })
       const data = await response.json()
@@ -92,7 +92,7 @@ const AdminDashboard: React.FC = () => {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await fetch("http://localhost:3000/admin/create-user", {
+      const response = await fetch("https://api.tedkoller.com/admin/create-user", {
         method: "POST",
         headers: getAdminHeaders(),
         body: JSON.stringify({ email: newUserEmail }),
@@ -116,7 +116,7 @@ const AdminDashboard: React.FC = () => {
   const handleDeleteUser = async (username: string) => {
     if (!window.confirm(`Are you sure you want to delete this user?`)) return
     try {
-      const response = await fetch("http://localhost:3000/admin/delete-user", {
+      const response = await fetch("https://api.tedkoller.com/admin/delete-user", {
         method: "DELETE",
         headers: getAdminHeaders(),
         body: JSON.stringify({ email: username }),
@@ -148,7 +148,7 @@ const AdminDashboard: React.FC = () => {
     setUploadError("")
     setUploadResult("")
     try {
-      const response = await fetch("http://localhost:3000/admin/generate-upload-url", {
+      const response = await fetch("https://api.tedkoller.com/admin/generate-upload-url", {
         method: "POST",
         headers: getAdminHeaders(),
         body: JSON.stringify({
@@ -177,13 +177,11 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
-  // NEW: Function to delete a file for the selected user.
-  // Note: We're now passing the full S3 key (file.key) rather than file.name.
   const handleDeleteFile = async (fileKey: string) => {
     if (!window.confirm("Are you sure you want to delete this file?")) return;
     const clientId = selectedUser.Attributes.find((attr: any) => attr.Name === "custom:clientId")?.Value;
     try {
-      const response = await fetch("http://localhost:3000/admin/delete-file", {
+      const response = await fetch("https://api.tedkoller.com/admin/delete-file", {
         method: "DELETE",
         headers: getAdminHeaders(),
         body: JSON.stringify({ clientId, key: fileKey }),
@@ -334,7 +332,7 @@ const AdminDashboard: React.FC = () => {
 
       <div className="section">
         <h2>Generate Report</h2>
-        <button className="button" onClick={() => window.open("http://localhost:3000/admin/report", "_blank")}>
+        <button className="button" onClick={() => window.open("https://api.tedkoller.com/admin/report", "_blank")}>
           Download Report (CSV)
         </button>
       </div>

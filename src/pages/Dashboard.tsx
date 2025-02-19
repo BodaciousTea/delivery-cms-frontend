@@ -46,11 +46,14 @@ const Dashboard: React.FC = () => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("No authentication token found.");
 
-        const response = await fetch("http://localhost:3000/api/files", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "https://api.tedkoller.com/api/files",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) throw new Error("Failed to fetch files.");
 
         const data = await response.json();
@@ -97,12 +100,16 @@ const Dashboard: React.FC = () => {
 
   const handleDownload = async (item: MediaItem): Promise<Blob> => {
     const response = await fetch(
-      `/admin/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`,
+      "https://api.tedkoller.com/admin/download?clientId=" +
+        item.clientId +
+        "&fileName=" +
+        encodeURIComponent(item.title),
       { method: "GET" }
     );
     if (!response.ok) throw new Error("Download failed");
     return await response.blob();
   };
+  
 
   return (
     <div className={styles.dashboard}>
@@ -139,6 +146,7 @@ const Dashboard: React.FC = () => {
       ) : (
         <MediaGrid items={filteredMedia} onDownload={handleDownload} />
       )}
+
     </div>
   );
 };

@@ -13,7 +13,7 @@ const AdminLogin: React.FC = () => {
     e.preventDefault();
     const authValue = "Basic " + btoa(`${username}:${password}`);
     try {
-      const response = await fetch("http://localhost:3000/admin/users", {
+      const response = await fetch("https://api.tedkoller.com/admin/users", {
         headers: { "Content-Type": "application/json", Authorization: authValue },
       });
       if (response.ok) {

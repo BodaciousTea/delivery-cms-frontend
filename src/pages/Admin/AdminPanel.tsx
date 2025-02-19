@@ -8,7 +8,7 @@ const CreateUserForm: React.FC = () => {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/admin/create-user", {
+      const response = await fetch("https://api.tedkoller.com/admin/create-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -75,7 +75,7 @@ const AdminUploadPanel: React.FC = () => {
     setUploadResult("");
 
     try {
-      const response = await fetch("http://localhost:3000/admin/generate-upload-url", {
+      const response = await fetch("https://api.tedkoller.com/admin/generate-upload-url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -140,7 +140,7 @@ const AdminUserList: React.FC = () => {
   React.useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:3000/admin/users");
+        const response = await fetch("https://api.tedkoller.com/admin/users");
         const data = await response.json();
         if (!response.ok) {
           setError(data.error || "Error fetching users");
@@ -197,7 +197,7 @@ const AdminDeleteUserPanel: React.FC = () => {
   const handleDeleteUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/admin/delete-user", {
+      const response = await fetch("https://api.tedkoller.com/admin/delete-user", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
