@@ -19,13 +19,14 @@ const AdminDashboard: React.FC = () => {
   const [error, setError] = useState("")
   const navigate = useNavigate()
 
-  const getAdminHeaders = () => {
-    const adminAuth = sessionStorage.getItem("adminAuth")
-    return {
-      "Content-Type": "application/json",
-      ...(adminAuth ? { Authorization: adminAuth } : {}),
-    }
-  }
+const getAdminHeaders = () => {
+  const adminAuth = sessionStorage.getItem("adminAuth");
+  return {
+    "Content-Type": "application/json",
+    ...(adminAuth ? { Authorization: adminAuth } : {}),
+  };
+};
+
 
   const fetchUsers = async () => {
     try {
@@ -135,48 +136,60 @@ const AdminDashboard: React.FC = () => {
   }
 
   const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+    // Ensure that a user is selected and a file is chosen
     if (!selectedUser || !uploadFile) {
-      setUploadError("No user or file selected")
-      return
+      setUploadError("No user or file selected");
+      return;
     }
-    const clientId = selectedUser.Attributes.find((attr: any) => attr.Name === "custom:clientId")?.Value
-    if (!clientId) {
-      setUploadError("Selected user has no clientId")
-      return
+    // Extract email and clientId from the selectedUser's attributes
+    const adminEmail = selectedUser.Attributes.find(
+      (attr: any) => attr.Name === "email"
+    )?.Value;
+    const clientIdValue = selectedUser.Attributes.find(
+      (attr: any) => attr.Name === "custom:clientId"
+    )?.Value;
+    
+    if (!clientIdValue) {
+      setUploadError("Selected user has no clientId");
+      return;
     }
-    setUploadError("")
-    setUploadResult("")
+    
+    setUploadError("");
+    setUploadResult("");
+  
     try {
+      // Use the extracted values in the request body
       const response = await fetch("https://api.tedkoller.com/admin/generate-upload-url", {
         method: "POST",
         headers: getAdminHeaders(),
         body: JSON.stringify({
-          email: selectedUser.Attributes.find((attr: any) => attr.Name === "email")?.Value,
-          clientId,
+          email: adminEmail,
+          clientId: clientIdValue,
           fileName: uploadFile.name,
         }),
-      })
-      const data = await response.json()
+      });
+      const data = await response.json();
       if (!response.ok) {
-        setUploadError(data.message || "Error generating upload URL")
-        return
+        setUploadError(data.error || "Error generating upload URL");
+        return;
       }
       const uploadResponse = await fetch(data.uploadUrl, {
         method: "PUT",
         body: uploadFile,
-      })
+      });
       if (!uploadResponse.ok) {
-        setUploadError("File upload failed")
-        return
+        setUploadError("File upload failed");
+        return;
       }
-      setUploadResult("File uploaded successfully! S3 key: " + data.key)
-      fetchUserFiles(clientId)
+      setUploadResult("File uploaded successfully! S3 key: " + data.key);
+      fetchUserFiles(clientIdValue);
     } catch (err: any) {
-      setUploadError(err.message || "An error occurred during file upload")
+      console.error(err);
+      setUploadError(err.message || "An error occurred during file upload");
     }
-  }
-
+  };
+  
   const handleDeleteFile = async (fileKey: string) => {
     if (!window.confirm("Are you sure you want to delete this file?")) return;
     const clientId = selectedUser.Attributes.find((attr: any) => attr.Name === "custom:clientId")?.Value;

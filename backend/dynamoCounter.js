@@ -10,8 +10,8 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient({
   },
 });
 
-const TABLE_NAME = "ClientCounter"; // Make sure this table exists in DynamoDB
-const COUNTER_ID = "clientCounter";   // The primary key value for your counter
+const TABLE_NAME = "ClientCounter";
+const COUNTER_ID = "clientCounter";
 
 async function getNextClientNumber() {
   const params = {

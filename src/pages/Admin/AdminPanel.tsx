@@ -234,7 +234,7 @@ const AdminDeleteUserPanel: React.FC = () => {
 };
 
 const AdminDashboard: React.FC = () => {
-  const [activeSection, setActiveSection] = useState("create"); // "create", "upload", "list", "delete"
+  const [activeSection, setActiveSection] = useState("create");
 
   return (
     <div style={{ padding: "20px" }}>

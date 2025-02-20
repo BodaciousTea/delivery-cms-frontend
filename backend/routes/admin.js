@@ -6,7 +6,6 @@ const AWS = require("aws-sdk");
 const basicAuth = require("express-basic-auth");
 const { getNextClientNumber } = require("../dynamoCounter");
 
-/* Protect all admin routes with HTTP Basic Auth
 router.use(
   basicAuth({
     users: { [process.env.ADMIN_USERNAME]: process.env.ADMIN_PASSWORD },
@@ -14,7 +13,6 @@ router.use(
     realm: "Admin Area",
   })
 );
-*/
 
 // Initialize the Cognito Identity Service Provider
 const cognitoISP = new AWS.CognitoIdentityServiceProvider({

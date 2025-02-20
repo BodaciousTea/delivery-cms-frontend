@@ -4,7 +4,6 @@ import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfil
 
 export default defineConfig(({ mode }) => {
   return {
-    // Use root path in dev, subpath in production
     base: mode === "production" ? "/delivery-cms-frontend/" : "/",
 
     plugins: [

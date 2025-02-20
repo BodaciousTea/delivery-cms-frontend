@@ -8,10 +8,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Register your routes
 const adminRoutes = require("./routes/admin");
 const fileRoutes = require("./routes/files");
-const otherRoutes = require("./routes/index"); // if you have additional routes
+const otherRoutes = require("./routes/index");
 
 app.use("/admin", adminRoutes);
 app.use("/api", fileRoutes);

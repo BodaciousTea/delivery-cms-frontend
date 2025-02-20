@@ -1,6 +1,6 @@
 // src/App.tsx
 import { Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard"; // Use default import
+import Dashboard from "./pages/Dashboard";
 import LoginPage from "./components/LoginPage";
 import AdminLogin from "./pages/Admin/AdminLogin";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
