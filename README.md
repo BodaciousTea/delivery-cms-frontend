@@ -1,29 +1,71 @@
-<strong>**DO NOT DISTRIBUTE OR PUBLICLY POST SOLUTIONS TO THESE LABS. MAKE ALL FORKS OF THIS REPOSITORY WITH SOLUTION CODE PRIVATE. PLEASE REFER TO THE STUDENT CODE OF CONDUCT AND ETHICAL EXPECTATIONS FOR COLLEGE OF INFORMATION TECHNOLOGY STUDENTS FOR SPECIFICS. **</strong>
+# Delivery CMS Setup Guide
 
-# WESTERN GOVERNORS UNIVERSITY 
-## D424 – SOFTWARE ENGINEERING CAPSTONE
-Welcome to Software Engineering Capstone! This is an opportunity for students to develop full stack software engineering documentation and applications. They will execute documentation, unit testing, revision of software applications, and deploy software applications with scripts and containers on a cloud platform.
+## Frontend Setup
 
-FOR SPECIFIC TASK INSTRUCTIONS AND REQUIREMENTS FOR THIS ASSESSMENT, PLEASE REFER TO THE COURSE PAGE.
-BASIC INSTRUCTIONS
-For this assessment, you will deploy your developed full stack software product to a web service of your choice.
+### Clone the Repository
+```sh
+git clone https://github.com/BodaciousTea/delivery-cms-frontend/tree/master
+```
 
+### Install Dependencies
+```sh
+npm install
+```
 
-## SUPPLEMENTAL RESOURCES  
-1.	How to clone a project to IntelliJ using Git?
+### Local Development
+```sh
+npm run dev
+```
 
-> Ensure that you have Git installed on your system and that IntelliJ is installed using [Toolbox](https://www.jetbrains.com/toolbox-app/). Make sure that you are using version 2022.3.2. Once this has been confirmed, click the clone button and use the 'IntelliJ IDEA (HTTPS)' button. This will open IntelliJ with a prompt to clone the proejct. Save it in a safe location for the directory and press clone. IntelliJ will prompt you for your credentials. Enter in your WGU Credentials and the project will be cloned onto your local machine.  
+**or**
 
-2. How to create a branch and start Development?
+```sh
+npm run build
+npm run preview
+```
 
-- GitLab method
-> Press the '+' button located near your branch name. In the dropdown list, press the 'New branch' button. This will allow you to create a name for your branch. Once the branch has been named, you can select 'Create Branch' to push the branch to your repository.
+### Production Build & Deployment
+```sh
+npm run build
+npm run deploy
+```
 
-- IntelliJ method
-> In IntelliJ, Go to the 'Git' button on the top toolbar. Select the new branch option and create a name for the branch. Make sure checkout branch is selected and press create. You can now add a commit message and push the new branch to the local repo.
+---
 
-## SUPPORT
-If you need additional support, please navigate to the course page and reach out to your course instructor.
+## Backend Setup
 
-## FUTURE USE
-Take this opportunity to create or add to a simple resume portfolio to highlight and showcase your work for future use in career search, experience, and education!
+### Navigate to the Backend Directory
+```sh
+cd delivery-cms/backend
+```
+
+### Install Dependencies
+```sh
+npm install
+```
+
+### Create a `.env` File
+Create a `.env` file in the backend directory and add your AWS secret values:
+
+```env
+ADMIN_USERNAME=yourAdminUsername
+ADMIN_PASSWORD=yourAdminPassword
+AWS_REGION=us-east-2
+AWS_ACCESS_KEY_ID=yourAccessKey
+AWS_SECRET_ACCESS_KEY=yourSecretKey
+COGNITO_USER_POOL_ID=yourUserPoolId
+S3_BUCKET_NAME=yourS3BucketName
+```
+
+### Local Testing
+Ensure the backend is running on `process.env.PORT || 3000`.
+
+```sh
+node app.js
+```
+
+### Deploy to AWS Elastic Beanstalk
+```sh
+eb deploy
+```
+
