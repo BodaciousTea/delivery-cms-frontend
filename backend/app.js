@@ -20,7 +20,11 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Media API! Use '/api/files' to fetch the list of files.");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Only start the server if not in test mode
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
+module.exports = app;

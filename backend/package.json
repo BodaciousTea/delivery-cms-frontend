@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "type": "commonjs",
   "keywords": [],
@@ -21,5 +21,9 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-basic-auth": "^1.2.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }
