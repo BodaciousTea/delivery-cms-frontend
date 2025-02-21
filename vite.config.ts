@@ -5,7 +5,6 @@ import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfil
 export default defineConfig(({ mode }) => {
   return {
     base: mode === "production" ? "/delivery-cms-frontend/" : "/",
-
     plugins: [
       react(),
       NodeGlobalsPolyfillPlugin({
@@ -18,12 +17,6 @@ export default defineConfig(({ mode }) => {
         define: {
           global: "globalThis",
         },
-        plugins: [
-          NodeGlobalsPolyfillPlugin({
-            buffer: true,
-            process: true,
-          }),
-        ],
       },
     },
   };
