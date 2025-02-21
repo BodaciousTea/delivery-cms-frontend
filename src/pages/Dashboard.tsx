@@ -104,7 +104,7 @@ const Dashboard: React.FC = () => {
       if (!token) throw new Error("No authentication token found.");
   
       const response = await fetch(
-        `https://api.tedkoller.com/admin/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`,
+        `https://api.tedkoller.com/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`,
         {
           method: "GET",
           headers: {
@@ -132,8 +132,6 @@ const Dashboard: React.FC = () => {
     }
   };
   
-  
-
   return (
     <div className={styles.dashboard}>
       <div className={styles.header}>
