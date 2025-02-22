@@ -1,11 +1,12 @@
 import styles from "./FileCard.module.css";
+import DownloadButton from "./DownloadButton";
 
 interface FileCardProps {
   name: string;
   size: string;
   uploadDate: string;
   downloads: number;
-  onDownload: () => void;
+  onDownload: () => Promise<Blob>;
 }
 
 export const FileCard = ({ name, size, uploadDate, downloads, onDownload }: FileCardProps) => {
@@ -21,9 +22,8 @@ export const FileCard = ({ name, size, uploadDate, downloads, onDownload }: File
           <span>{downloads} downloads</span>
         </div>
       </div>
-      <button onClick={onDownload} className={styles.downloadButton}>
-        Download
-      </button>
+      {}
+      <DownloadButton url="" filename={name} onDownload={onDownload} />
     </div>
   );
 };

@@ -104,40 +104,34 @@ const Dashboard: React.FC = () => {
   }, [searchQuery, selectedProject, mediaItems]);
 
   const handleDownload = async (item: MediaItem): Promise<Blob> => {
+    console.log("🔍 handleDownload triggered for:", item.title);
+    
     try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No authentication token found.");
-  
-      // Must call "/api/download"
-      const response = await fetch(
-        `https://api.tedkoller.com/api/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No authentication token found.");
 
-      if (!response.ok) throw new Error(`Download failed: ${response.statusText}`);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = item.title;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-      return blob;
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An unknown error occurred";
-      console.error("Download failed:", errorMessage);
-      alert("Download failed: " + errorMessage);
-      throw error;
+        console.log("📡 Sending download request...");
+        const response = await fetch(
+            `https://api.tedkoller.com/api/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        if (!response.ok) throw new Error(`Download failed: ${response.statusText}`);
+
+        console.log("✅ File downloaded successfully.");
+        return await response.blob();
+    } catch (error) {
+        console.error("❌ Download failed:", error);
+        alert("Download failed: " + (error instanceof Error ? error.message : "Unknown error"));
+        throw error;
     }
-  };
+};
+
   
   return (
     <div className={styles.dashboard}>

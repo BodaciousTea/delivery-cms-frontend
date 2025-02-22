@@ -39,11 +39,7 @@ const MediaGrid: React.FC<MediaGridProps> = ({ items, onDownload }) => {
           <div className={styles.mediaInfo}>
             <h3 className={styles.mediaTitle}>{item.title}</h3>
             <div className={styles.downloadWrapper}>
-            <DownloadButton
-               url={onDownload ? "" : `/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`}
-               filename={item.title}
-               onDownload={onDownload ? () => onDownload(item) : undefined}
-            />
+            <DownloadButton url="" filename={item.title} onDownload={onDownload ? () => onDownload(item) : undefined} />
             </div>
           </div>
         </div>
