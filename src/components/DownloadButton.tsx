@@ -32,38 +32,41 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ url, filename, onDownlo
     };
   }, [state]);
 
-  const handleClick = async () => {
-    if (state === 'downloading') return;
-    if (state === 'completed') {
-      setState('idle');
-      return;
-    }
-    setState('downloading');
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault(); // Prevent any default behavior that might cause a duplicate action
 
-    if (onDownload) {
-      try {
-        const blob = await onDownload();
-        const blobUrl = window.URL.createObjectURL(blob);
-        if (linkRef.current) {
-          linkRef.current.href = blobUrl;
-          linkRef.current.download = filename;
-          linkRef.current.click();
-        }
-        setTimeout(() => {
-          window.URL.revokeObjectURL(blobUrl);
-        }, 10000);
-      } catch (error) {
-        console.error("Download failed:", error);
-        setState('idle');
-      }
-    } else {
+  if (state === 'downloading') return;
+  if (state === 'completed') {
+    setState('idle');
+    return;
+  }
+  setState('downloading');
+
+  if (onDownload) {
+    try {
+      const blob = await onDownload();
+      const blobUrl = window.URL.createObjectURL(blob);
       if (linkRef.current) {
-        linkRef.current.href = url;
+        linkRef.current.href = blobUrl;
         linkRef.current.download = filename;
         linkRef.current.click();
       }
+      setTimeout(() => {
+        window.URL.revokeObjectURL(blobUrl);
+      }, 10000);
+    } catch (error) {
+      console.error("Download failed:", error);
+      setState('idle');
     }
-  };
+  } else if (url) {
+    if (linkRef.current) {
+      linkRef.current.href = url;
+      linkRef.current.download = filename;
+      linkRef.current.click();
+    }
+  }
+};
+
 
   return (
     <>

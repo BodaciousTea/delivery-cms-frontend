@@ -1,4 +1,3 @@
-// src/pages/Dashboard.tsx
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import MediaGrid from "../components/MediaGrid";
@@ -45,20 +44,24 @@ const Dashboard: React.FC = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("No authentication token found.");
-
-        const response = await fetch(
-          "https://api.tedkoller.com/api/files",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (!response.ok) throw new Error("Failed to fetch files.");
-
+    
+        console.log("Auth Token:", token); // Debug log
+    
+        const response = await fetch("https://api.tedkoller.com/api/files", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+    
+        console.log("Response status:", response.status);
+        console.log("Response headers:", response.headers);
+    
+        if (!response.ok) throw new Error(`Failed to fetch files. Status: ${response.status}`);
+    
         const data = await response.json();
+        console.log("Fetched data:", data);
+    
         const clientId = localStorage.getItem("clientId") || "client1";
-
         const formattedData = data.files.map((file: { name: string; url: string }) => {
           const ext = file.name.split(".").pop()?.toLowerCase();
           const isImage = ext && ["jpg", "jpeg", "png", "gif", "webp"].includes(ext);
@@ -72,13 +75,15 @@ const Dashboard: React.FC = () => {
             clientId,
           };
         });
+    
         setMediaItems(formattedData);
       } catch (err: any) {
+        console.error("Error fetching media:", err);
         setError(err.message || "An error occurred.");
       } finally {
         setLoading(false);
       }
-    };
+    };       
 
     fetchMedia();
   }, []);
@@ -99,39 +104,40 @@ const Dashboard: React.FC = () => {
   }, [searchQuery, selectedProject, mediaItems]);
 
   const handleDownload = async (item: MediaItem): Promise<Blob> => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found.");
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found.");
+  
+      // Must call "/api/download"
+      const response = await fetch(
+        `https://api.tedkoller.com/api/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    const response = await fetch(
-      `https://api.tedkoller.com/download?clientId=${item.clientId}&fileName=${encodeURIComponent(item.title)}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (!response.ok) throw new Error(`Download failed: ${response.statusText}`);
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = item.title;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-    return blob;
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "An unknown error occurred";
-    console.error("Download failed:", errorMessage);
-    alert("Download failed: " + errorMessage);
-    throw error;
-  }
-};
-
+      if (!response.ok) throw new Error(`Download failed: ${response.statusText}`);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = item.title;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      return blob;
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      console.error("Download failed:", errorMessage);
+      alert("Download failed: " + errorMessage);
+      throw error;
+    }
+  };
   
   return (
     <div className={styles.dashboard}>
@@ -168,7 +174,6 @@ const Dashboard: React.FC = () => {
       ) : (
         <MediaGrid items={filteredMedia} onDownload={handleDownload} />
       )}
-
     </div>
   );
 };

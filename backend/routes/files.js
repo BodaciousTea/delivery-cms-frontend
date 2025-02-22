@@ -1,9 +1,10 @@
-// files.js
 const express = require("express");
-const { S3Client, ListObjectsV2Command, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, GetObjectCommand, ListObjectsV2Command } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const authMiddleware = require("../middleware/auth");
 
+
+module.exports = { authMiddleware };
 const router = express.Router();
 
 const s3 = new S3Client({
@@ -14,9 +15,8 @@ const s3 = new S3Client({
   },
 });
 
-// Existing endpoint for listing files
 router.get("/files", authMiddleware, async (req, res) => {
-  const clientId = req.user["custom:clientId"];
+  const clientId = req.user && req.user["custom:clientId"];
   if (!clientId) {
     return res.status(400).json({ error: "No clientId associated with user" });
   }
@@ -29,12 +29,12 @@ router.get("/files", authMiddleware, async (req, res) => {
   try {
     const data = await s3.send(new ListObjectsV2Command(bucketParams));
     if (!data.Contents || data.Contents.length === 0) {
-      return res.status(200).json({ files: [] }); 
+      return res.status(200).json({ files: [] });
     }
 
     const files = await Promise.all(
       data.Contents.map(async (file) => {
-        if (file.Key.endsWith("/")) return null; 
+        if (file.Key.endsWith("/")) return null;
         const url = await getSignedUrl(
           s3,
           new GetObjectCommand({
@@ -70,13 +70,15 @@ router.get("/download", authMiddleware, async (req, res) => {
       Bucket: process.env.S3_BUCKET_NAME,
       Key: key,
     });
+
     const s3Response = await s3.send(command);
 
     res.attachment(fileName.toString());
     if (s3Response.ContentType) {
       res.setHeader("Content-Type", s3Response.ContentType);
     }
-    s3Response.Body.pipe(res);
+
+    s3Response.Body.pipe(res).on("finish", () => res.end());
   } catch (err) {
     console.error("Error streaming download:", err);
     res.status(500).json({
